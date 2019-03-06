@@ -1,21 +1,11 @@
-import {cube} from './math.js'
-if (process.env.NODE_ENV === 'production') {
-  console.log('Looks like we are in production mode!')
-}
-if (process.env.NODE_ENV === 'development') {
-  console.log('Looks like we are in development mode!')
-}
-
-function component() {
-    var element = document.createElement('pre');
-
-    element.innerHTML = [
-        'Hello webpack!',
-        '5 cubed id equal to ' + cube(5)
-    ].join('\n\n')
-
-    return element;
+function getComponent() {
+  return import(/* webpackChunkName: "lodash" */ 'lodash').then(({default: _}) => {
+    var element = document.createElement('div')
+    element.innerHTML = _.join(['Hello', 'webpack'], ' ')
+    return element
+  }).catch(error => 'An error occurred while loading the component')
 }
 
-var element = component()
-document.body.appendChild(element)
+getComponent().then(component => {
+  document.body.appendChild(component);
+})
